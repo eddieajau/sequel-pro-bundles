@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>category</key>
+	<string>Copy</string>
+	<key>command</key>
+	<string>cat | php -R '
+// Capture the first lines as the table headings.
+if (empty($columns)) {
+	$columns = str_getcsv($argn);
+}
+// Capture all other lines as data.
+else {
+	$rows[] = str_getcsv($argn);
+}
+' -E '
+foreach ($rows as $row) {
+	echo "\t\t&lt;row&gt;\n";
+	
+	foreach ($row as $value) {
+		echo "\t\t\t&lt;value&gt;$value&lt;/value&gt;\n";
+	}
+	
+	echo "\t\t&lt;/row&gt;\n";
+}
+' | __CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbcopy</string>
+	<key>input</key>
+	<string>selectedtablerowsascsv</string>
+	<key>name</key>
+	<string>Copy as XML row</string>
+	<key>scope</key>
+	<string>datatable</string>
+	<key>tooltip</key>
+	<string>Copies the selected rows as XML for use in PHPUnit database test cases.</string>
+	<key>uuid</key>
+	<string>C1577035-0B93-496D-BFE1-E431003BDF66</string>
+</dict>
+</plist>

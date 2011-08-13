@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>category</key>
+	<string>Copy</string>
+	<key>command</key>
+	<string>cat | php -R '
+// Capture the first lines as the table headings.
+if (empty($columns)) {
+	$columns = str_getcsv($argn);
+}
+// Capture all other lines as data.
+else {
+	$rows[] = str_getcsv($argn);
+}
+' -E '
+echo "&lt;?xml version=\"1.0\" encoding=\"UTF-8\" ?&gt;\n";
+echo "&lt;dataset&gt;\n";
+echo "\t&lt;table name=\"".$_SERVER["SP_SELECTED_TABLE"]."\"&gt;\n";
+
+foreach ($columns as $column) {
+	echo "\t\t&lt;column&gt;$column&lt;/column&gt;\n";
+}
+
+foreach ($rows as $row) {
+	echo "\t\t&lt;row&gt;\n";
+	
+	foreach ($row as $value) {
+		echo "\t\t\t&lt;value&gt;$value&lt;/value&gt;\n";
+	}
+	
+	echo "\t\t&lt;/row&gt;\n";
+}
+
+echo "\t&lt;/table&gt;\n";
+echo "&lt;/dataset&gt;\n";
+
+' | __CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbcopy</string>
+	<key>input</key>
+	<string>selectedtablerowsascsv</string>
+	<key>keyEquivalent</key>
+	<string></string>
+	<key>name</key>
+	<string>Copy as XML</string>
+	<key>scope</key>
+	<string>datatable</string>
+	<key>tooltip</key>
+	<string>Copies the selected rows as XML for use in PHPUnit database test cases.</string>
+	<key>uuid</key>
+	<string>56A640A6-637A-43B8-81CE-EC1ADF000A66</string>
+</dict>
+</plist>
